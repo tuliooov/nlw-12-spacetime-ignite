@@ -1,7 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['avatars.githubusercontent.com', '192.168.15.115'],
+    domains: [
+      'avatars.githubusercontent.com',
+      '169.254.163.152',
+      'firebasestorage.googleapis.com',
+    ],
   },
 }
 

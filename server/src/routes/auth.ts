@@ -27,7 +27,6 @@ export async function authRoutes(app: FastifyInstance) {
     )
 
     const { access_token } = accessTokenResponse.data
-
     const userResponse = await axios.get('https://api.github.com/user', {
       headers: {
         Authorization: `Bearer ${access_token}`,
@@ -42,7 +41,6 @@ export async function authRoutes(app: FastifyInstance) {
     })
 
     const userInfo = userSchema.parse(userResponse.data)
-
     let user = await prisma.user.findUnique({
       where: {
         githubId: userInfo.id,
@@ -70,6 +68,7 @@ export async function authRoutes(app: FastifyInstance) {
         expiresIn: '30 days',
       },
     )
+
 
     return {
       token,

@@ -17,6 +17,7 @@ interface Memory {
   excerpt: string
   createdAt: string
   id: string
+  isPublic: string
 }
 
 export default function NewMemory() {
@@ -33,11 +34,12 @@ export default function NewMemory() {
   async function loadMemories() {
     const token = await SecureStore.getItemAsync('token')
 
-    const response = await api.get('/memories', {
+    const response = await api.get(`/memories${token ? '' : '/offline'}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
+    console.log(response)
 
     setMemories(response.data)
   }
@@ -74,11 +76,18 @@ export default function NewMemory() {
         {memories.map((memory) => {
           return (
             <View key={memory.id} className="space-y-4">
-              <View className="flex-row items-center gap-2">
+              <View className="flex-row items-center  gap-2 ">
                 <View className="h-px w-5 bg-gray-50" />
-                <Text className="font-body text-sm text-gray-100">
-                  {dayjs(memory.createdAt).format('D[ de ]MMMM[, ]YYYY')}
-                </Text>
+                <View className="flex flex-row align-middle">
+                  <Text className="font-body text-sm text-gray-100 ">
+                    {dayjs(memory.createdAt).format('D[ de ]MMMM[, ]YYYY')}
+                  </Text>
+                  {memory.isPublic && (
+                    <View className="rounded-lg bg-purple-500 px-2 py-1 align-middle ">
+                      <Text className="text-xs text-white">Público</Text>
+                    </View>
+                  )}
+                </View>
               </View>
               <View className="space-y-4 px-8">
                 <Image

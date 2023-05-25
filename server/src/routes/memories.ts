@@ -13,7 +13,6 @@ export async function memoriesRoutes(app: FastifyInstance) {
       },
     })
 
-    // console.log(memories)
     return memories.map((memory) => {
       return {
         id: memory.id,

@@ -10,6 +10,10 @@ dayjs.locale(ptBR)
 export default async function Home() {
   const isAuthenticated = cookies().has('token')
 
+  // if (!isAuthenticated) {
+  //   return <EmptyMemories />
+  // }
+
   const token = cookies().get('token')?.value
 
   const response = await api.get(
@@ -21,11 +25,8 @@ export default async function Home() {
     },
   )
 
-  console.log(response)
-
   const memories: IMemory[] = response.data
 
-  console.log(memories)
   if (memories.length === 0) {
     return <EmptyMemories />
   }

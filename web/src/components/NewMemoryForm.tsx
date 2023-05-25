@@ -6,6 +6,11 @@ import { FormEvent } from 'react'
 import { api } from '@/lib/api'
 import Cookie from 'js-cookie'
 import { useRouter } from 'next/navigation'
+import { storage } from '@/firebase/config'
+import { ref, uploadBytesResumable } from '@firebase/storage'
+import { randomUUID } from 'crypto'
+
+import { v4 as uuidV4 } from 'uuid'
 
 export function NewMemoryForm() {
   const router = useRouter()
@@ -15,25 +20,41 @@ export function NewMemoryForm() {
 
     const formData = new FormData(event.currentTarget)
 
-    const fileToUpload = formData.get('coverUrl')
+    const fileToUpload = formData.get('coverUrl') as File
 
-    let coverUrl = ''
-
+    let nameFile = ''
     if (fileToUpload) {
-      const uploadFormData = new FormData()
-      uploadFormData.set('file', fileToUpload)
-
-      const uploadResponse = await api.post('/upload', uploadFormData)
-
-      coverUrl = uploadResponse.data.fileUrl
+      const type = fileToUpload.type.slice(
+        fileToUpload.type.indexOf('/') + 1,
+        fileToUpload.type.length,
+      )
+      nameFile = `${uuidV4()}.${type}`
+      console.log('nameFile', nameFile)
+      const storageRef = ref(storage, `/nlw-space-time/${nameFile}`)
+      uploadBytesResumable(storageRef, fileToUpload, {
+        cacheControl: 'max-age=31536000',
+        customMetadata: {
+          organizationId: process.env.NEXT_PUBLIC_STORAGE_BUCKET!,
+        },
+      })
     }
+
+    // if (fileToUpload) {
+
+    // const uploadFormData = new FormData()
+    // uploadFormData.set('file', fileToUpload)
+
+    // const uploadResponse = await api.post('/upload', uploadFormData)
+
+    // coverUrl = uploadResponse.data.fileUrl
+    // }
 
     const token = Cookie.get('token')
 
     await api.post(
       '/memories',
       {
-        coverUrl,
+        coverUrl: nameFile,
         content: formData.get('content'),
         isPublic: formData.get('isPublic'),
       },

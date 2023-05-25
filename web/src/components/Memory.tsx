@@ -31,7 +31,9 @@ export function Memory({ memory }: MemoryProps) {
         )}
       </div>
       <Image
-        src={memory.coverUrl}
+        // src={`https://firebasestorage.googleapis.com/v0/b/search-of-carnival-7-boracodar.appspot.com/o/nlw-space-time-7%2F${memory.coverUrl}?alt=media&token=409c594e-019a-484b-a19d-9588c310e730`}
+        src={`https://firebasestorage.googleapis.com/v0/b/search-of-carnival-7-boracodar.appspot.com/o/nlw-space-time%2F${memory.coverUrl}?alt=media&token=1ae335a0-7734-45d2-a24b-391f9f1d9120`}
+        // src={memory.coverUrl}
         alt=""
         width={592}
         height={280}
